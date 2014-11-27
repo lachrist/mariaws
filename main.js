@@ -11,7 +11,9 @@ var stop = Mariaws.start({
 })
 
 process.on("SIGINT", stop)
+process.on("SIGINT", function () {console.log("yo")})
 process.on("SIGTERM", stop)
+process.on("SIGTERM", function () {console.log("yo")})
 
 function arg (name) {
   var key = name+"="
