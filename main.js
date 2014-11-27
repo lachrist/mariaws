@@ -19,7 +19,7 @@ function arg (name) {
   var key = name+"="
   for (var i=0; i<process.argv.length; i++) {
     if (process.argv[i].indexOf(key) === 0) {
-      return process.argv[i].replace(key)
+      return process.argv[i].replace(key, "")
     }
   }
   return null
