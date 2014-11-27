@@ -41,7 +41,8 @@ To do so should:
   1. Get nginx.
   2. Create anywhere a file named nginx.conf with the below content:
 
-      ```events { }
+      ```
+      events { }
       http {
         server {
           listen 80;
@@ -53,7 +54,8 @@ To do so should:
             proxy_set_header Connection "upgrade";
           }
         }
-      }```
+      }
+      ```
 
   3. Replace `PATH-TO-MARIAWS` with the path to the directory of MariaWS.
   4. Make sure everyone is able to read `index.html` ; if your system is Unix/OSX you can run `chmod a+x index.html`.
