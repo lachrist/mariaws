@@ -42,7 +42,7 @@ exports.start = function (options) {
   var heartrate = options.heartrate || 30000
   var sql_port = options.sql_port || 3306
   var sql_host = options.sql_host || "localhost"
-  var server = new WebSocket.Server({port:ws_port, clientTracking: true})
+  var server = new Ws.Server({port:ws_port, clientTracking: true})
   var dbs = {}
 
   setInterval(function () {
