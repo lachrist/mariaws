@@ -39,20 +39,19 @@ To do so should:
 1. Have a MariaDB server running locally and listening to port 3306 (should also work with MySQL).
 2. Have a local HTTP server able to serve the index.html file from this repository and that forward Web Socket connections to http://localhost:8000. If you dont know how to do this you can:
   1. Get nginx.
-  2. Create anywhere a file named nginx.conf with the below content:
-  ```events { }
-  http {
-    server {
-      listen 80;
-      root PATH-TO-MARIAWS;
-      location = /ws {
-        proxy_pass http://localhost:8000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
+  2. Create anywhere a file named nginx.conf with the below content: ```events { }
+    http {
+      server {
+        listen 80;
+        root PATH-TO-MARIAWS;
+        location = /ws {
+          proxy_pass http://localhost:8000;
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+        }
       }
-    }
-  }```
+    }```
   3. Replace `PATH-TO-MARIAWS` with the path to the directory of MariaWS.
   4. Make sure everyone is able to read `index.html` ; if your system is Unix/OSX you can run `chmod a+x index.html`.
   5. Run in the terminal: `nginx -c nginx.conf`.
