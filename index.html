@@ -38,7 +38,7 @@
 
       ws.onmessage = function (evt) {
         var res = JSON.parse(evt.data)
-        ks[res.echo](res.status, res.data)
+        ks[res.echo](res.error, res.data)
         delete ks[res.echo]
       }
 

@@ -12,8 +12,8 @@ var Db = require("./db.js")
 // Socket helpers //
 ////////////////////
 
-function send (ws, echo, status, data) {
-  var msg = JSON.stringify([echo, status, data])
+function send (ws, echo, error, data) {
+  var msg = JSON.stringify({echo:echo, error:error, data:data})
   Log.info("Send", msg)
   ws.send(msg, function (err) { if (err) { terminate(ws, "Send failure", err) } })
 }
@@ -74,7 +74,7 @@ exports.start = function (options) {
       )
     }
     if (((typeof o.key) ==="string") && ((typeof o.sql) === "string")) {
-      if (!dbs[o.hash]) { return send(ws, o.echo, "database-connection-closed") }
+      if (!dbs[o.hash]) { return send(ws, o.echo, "db-connection-closed") }
       return dbs[hash].query(o.query, function (err, rowss) { send (ws, o.echo, err?err.code:null, rowss) })
     }
     send(ws, o.echo, "invalid-fields", null)
