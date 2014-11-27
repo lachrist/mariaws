@@ -1,5 +1,5 @@
 
-var Mariaws = require("./mariawa.js")
+var Mariaws = require("./mariaws.js")
 
 Mariaws.log(arg("log"))
 
@@ -10,10 +10,8 @@ var stop = Mariaws.start({
   heartrate: arg("heartrate")
 })
 
-
 process.on("SIGINT", stop)
 process.on("SIGTERM", stop)
-
 
 function arg (name) {
   var key = name+"="

@@ -1,6 +1,6 @@
 { "name" : "mariaws"
-, "version" : "0.0.1"
-, "dependencies": {"ws":">=0.5.0", "mariasql":">=0.1.21"}
+, "version" : "0.0.2"
+, "dependencies": {"ws":"=0.5.0", "mariasql":"=0.1.21"}
 , "files" : ["mariaws.js", "db.js", "log.js", "main.js"]
 , "main": "mariaws.js"
 , "bin": "./main.js"
