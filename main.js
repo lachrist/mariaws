@@ -10,8 +10,10 @@ var stop = Mariaws.start({
   heartrate: arg("heartrate")
 })
 
+
 process.on("SIGINT", stop)
 process.on("SIGTERM", stop)
+
 
 function arg (name) {
   var key = name+"="
