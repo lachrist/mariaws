@@ -39,7 +39,7 @@ exports.log = Log.gran
 exports.start = function (options) {
 
   var ws_port = options.ws_port || 8000
-  var heartrate = options.heartrate || 30000
+  var heartrate = options.heartrate || 30
   var sql_port = options.sql_port || 3306
   var sql_host = options.sql_host || "localhost"
   var server = new Ws.Server({port:ws_port, clientTracking: true})
@@ -52,7 +52,7 @@ exports.start = function (options) {
       ws.__pong = false
       try { ws.ping() } catch (err) { terminate(ws, "Ping failure", err) }
     })
-  }, heartrate)
+  }, heartrate*1000)
 
   function onpong () { this.__pong = true }
 
