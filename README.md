@@ -41,7 +41,7 @@ To do so should:
   1. Get nginx.
   2. Create anywhere a file named nginx.conf with the below content:
 
-      ```
+      ```nginx
       events { }
       http {
         server {
