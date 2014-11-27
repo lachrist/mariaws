@@ -15,7 +15,7 @@ function log (stream, severity, datas) {
 }
 
 exports.info = nil
-exprots.warn = nil 
+exports.warn = nil 
 exports.fail = function () { log(process.stderr, "ERROR", arguments) }
 
 exports.gran = function (level) {
