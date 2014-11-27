@@ -35,11 +35,11 @@ Two JSON templates are recognized by MariaWS:
 
 Below here is example of successful communication:
 ```json
->> {echo:1, user:"smith", password:"secret"}
-<< {echo:1, error:null, data:"as2dK...w4="}
+>> {"echo":1, "user":"smith", "password":"secret"}
+<< {"echo":1, "error":null, "data":"as2dK...w4="}
 
->> {echo:123, key:"as2dK...w4=", sql:"SELECT * FROM car;"}
-<< {echo:123, error:null, data:[[["mercedes", "65000€"], ["volkswaegen", "25000€"]]]}
+>> {"echo":2, "key":"as2dK...w4=", "sql":"SELECT * FROM car;"}
+<< {"echo":2, "error":null, "data":[[["mercedes", "65000€"], ["volkswaegen", "25000€"]]]}
 ```
 
 Beside mysql error code, the error field can contain one of the below values:
