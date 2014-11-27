@@ -8,7 +8,7 @@ MariaWS is a simple WebSocket server for communicating to a MariaDB server (shou
 With MariaWS you can use your browser directly talk to a remote database.
 A MariaWS server can be started with the command:
 
-```bash
+```shell
 node main.js log=LOG_LEVEL ws-port=WS_PORT heartrate=HEARTRATE sql-host=SQL_HOST sql-port=SQL_PORT
 ```
 
