@@ -93,6 +93,7 @@ exports.start = function (options) {
     for (var hash in dbs) { dbs[hash].end() }
     server.clients.forEach(function (ws) { ws.close(1001, "server-interpupted") })
     server.close()
+    process.exit()
   }
 
 }

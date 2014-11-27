@@ -19,7 +19,6 @@ exports.warn = nil
 exports.fail = function () { log(process.stderr, "ERROR", arguments) }
 
 exports.gran = function (level) {
-  console.log("hue "+level)
   exports.info = (level==="info") ? function () { log(process.stdout, "info", arguments) } : nil
   exports.warn = (level==="info"||level==="warning") ? function () { log(process.stdout, "Warning", arguments) } : nil
 }
