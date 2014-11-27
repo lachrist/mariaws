@@ -8,7 +8,9 @@ MariaWS is a simple WebSocket server for communicating to a MariaDB server (shou
 With MariaWS you can use your browser directly talk to a remote database.
 A MariaWS server can be started with the command:
 
-```node main.js log=LOG_LEVEL ws-port=WS_PORT heartrate=HEARTRATE sql-host=SQL_HOST sql-port=SQL_PORT```
+```bash
+node main.js log=LOG_LEVEL ws-port=WS_PORT heartrate=HEARTRATE sql-host=SQL_HOST sql-port=SQL_PORT
+```
 
 Where:
   * `LOG_LEVEL` is the granularity of the loggin information. The possible values are `info`, `warning` and `error`, the default value is `error`.
@@ -35,7 +37,7 @@ Note that you can use the `nohup` command to directly get the prompt back withou
 ## SQL console inside
 
 To demonstrate the usage of MariaWS lets setup a SQL console within your browser.
-To do so should:
+To do so, you should:
   1. Have a MariaDB server running locally and listening to port 3306 (should also work with MySQL).
   2. Have a local HTTP server able to serve the index.html file from this repository and that forward Web Socket connections to http://localhost:8000. If you dont know how to do this you can:
     1. Get nginx.
