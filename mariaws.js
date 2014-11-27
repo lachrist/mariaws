@@ -73,7 +73,7 @@ exports.start = function (options) {
         }
       )
     }
-    if (((typeof o.key) ==="string") && ((typeof o.query) === "string")) {
+    if (((typeof o.key) ==="string") && ((typeof o.sql) === "string")) {
       if (!dbs[o.hash]) { return send(ws, o.echo, "database-connection-closed") }
       return dbs[hash].query(o.query, function (err, rowss) { send (ws, o.echo, err?err.code:null, rowss) })
     }

@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>MariaWS Demo</title>
+  </head>
+  <body>
+    <div>
+      <input id="user" type="text"></input>
+      <input id="password" type="password" ></input>
+      <button id="connect" onclick="connect()">(Re)connect</button>
+      <span id="connect-label"></span>
+    </div>
+    <textarea id="sql"></textarea>
+    <button id="query" onclick="query()">Run SQL query</button>
+    <span id="query-label"></span>
+    <ol id="rowss"></ol>
+  </body>
+  <script>
+
+    ///////////////////////////////////////////////
+    // Initiliazing window.db to talk to MariaWS //
+    ///////////////////////////////////////////////
+
+    (function () {
+
+      var ws = new WebSocket("ws://localhost:80/ws")
+      var ks = {}
+      var key
+      var echo = 1
+
+      function send (data, k) {
+        if (echo > Number.MAX_VALUE) { echo = 1 }
+        ks[++echo] = k
+        data.echo = echo
+        ws.send(JSON.stringify(data))
+      }
+
+      ws.onmessage = function (evt) {
+        var res = JSON.parse(evt.data)
+        ks[res.echo](res.status, res.data)
+        delete ks[res.echo]
+      }
+
+      window.db = {}
+      window.db.connect = function (user, password, k) {
+        send({user:user, password:password}, function (err, key_) {
+          if (!err) { key = key_ }
+          k(err)
+        })
+      }
+      window.db.query = function (sql, k) { send({key:key, sql:sql}, k) }
+
+    } ())
+
+    ////////////////////////////////////
+    // On click to the connect button //
+    ////////////////////////////////////
+
+    function connect () {
+      document.getElementById("user").disabled = true
+      document.getElementById("password").disabled = true
+      document.getElementById("connect").disabled = true
+      document.getElementById("connect-label").innerHTML = ""
+      db.connect(document.getElementById("user").value, document.getElementById("password").value, function (err) {
+        document.getElementById("user").disabled = false
+        document.getElementById("password").disabled = false
+        document.getElementById("connect").disabled = false
+        document.getElementById("connect-label").innerHTML = err?String(err):"Connected!"
+      })
+    }
+
+    //////////////////////////////////
+    // On click to the query button //
+    //////////////////////////////////
+
+    function query () {
+      document.getElementById("sql").disabled = true
+      document.getElementById("query").disabled = true
+      document.getElementById("query-label").innerHTML = ""
+      while(document.getElementById("rowss").firstChild) { document.getElementById("rowss").firstChild.remove() }
+      db.query(document.getElementById("query").value, function (err, rows) {
+        document.getElementById("sql").disabled = false
+        document.getElementById("query").disabled = false
+        document.getElementById("query-label").innerHTML = err?String(err):"The query succeed!"
+        for (var i=0; i<rowss.length; i++) {
+          var li = document.createElement("li")
+          var table = document.createElement("table")
+          li.appendChild(table)
+          document.getElementById("rowss").appendChild(li)
+          for (var j=0; j<rowss[i].length; j++) {
+            var tr = document.createElement("tr")
+            table.appendChild(tr)
+            for (var k=0; k<rowss[i][j].length; k++) {
+              var td = document.createElement("td")
+              td.innerText = rowss[i][j][k]
+              tr.appendChild(td)
+            }
+          }
+        }
+      })
+    }
+
+  </script>
+</html>
