@@ -9,18 +9,18 @@ With MariaWS you can use your browser directly talk to a remote database.
 A MariaWS server can be started with the command:
 
 ```shell
-node main.js log=LOG_LEVEL ws-port=WS_PORT heartrate=HEARTRATE sql-host=SQL_HOST sql-port=SQL_PORT
+node main.js log=LOG ws-port=WSPORT heartrate=HEARTRATE sql-host=SQLHOST sql-port=SQLPORT
 ```
 
 Where:
-  * `LOG_LEVEL` is the granularity of the loggin information. The possible values are `info`, `warning` and `error`, the default value is `error`.
+  * `LOG` is the granularity of the loggin information. The possible values are `info`, `warning` and `error`, the default value is `error`.
     * The `info` level logs pretty much everything into the standard output stream (e.g. incomming messages, responses and pings).
     * The `warning` level log into the standord output streams events that deviate from the standard behvior (e.g. ping timeout and WebSocket error).
     *The `error` level only logs programmatic and critical errors into the standard error stream.
-  * `WS_PORT` is the port the node WebSocket server should listen to, the default value is `8000`.
+  * `WSPORT` is the port the node WebSocket server should listen to, the default value is `8000`.
   * `HEARTRATE` is the number of millisecond between successive pings, the default value is `30000`.
-  * `SQL_HOST` is the host address of the MariaDB server, the default value is `localhost`.
-  * `SQL_PORT` is the port that MariaDB server is listening to, the default value is `3306`.
+  * `SQLHOST` is the host address of the MariaDB server, the default value is `localhost`.
+  * `SQLPORT` is the port that MariaDB server is listening to, the default value is `3306`.
 
 To gracefully stop MariaWS, simply send the `SIGINT` or `SIGTERM` signal to the node process.
 Note that you can use the `nohup` command to directly get the prompt back without stopping the server. For instance: `nohup node main.js 1>mariaws.log 2>mariaws.err &`.
