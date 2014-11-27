@@ -83,3 +83,32 @@ To do so, you should:
     5. Run `nginx -c nginx.conf`.
   3. Start MariaWS with the command `mariaws`.
   4. Open your preferred browser (should support WebSockets) and navigate to `http://localhost/index.html`.
+
+## API
+
+MariaWS can also be used within other node modules.
+MariaWS only exposed two functions:
+  * `log`: changes the logging level (initially set to `error`).
+  * `start`: starts a new WebSocket server and returns a function that when invoked shut it down gracefully ; `start` takes an object as parameter that can contain the following fields:
+    * `ws_port`: the WebSocket port.
+    * `sql_port`: the MariaDB port.
+    * `sql_host`: the MariaDB host.
+    * `heartrate`: the number of second between two successive pings.
+
+For instance:
+```javascript
+var Mariaws = require("mariaws")
+
+Mariaws.log("info")
+
+var stop = Mariaws.start({
+  ws_port: 8000,
+  sql_port: 3306,
+  sql_host: localhost,
+  heartrate: 30
+})
+
+process.on("SIGINT", stop)
+```
+
+
