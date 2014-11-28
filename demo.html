@@ -49,7 +49,7 @@
 
       var ws = new WebSocket("ws://localhost:80/ws")
       var ks = {}
-      var key
+      var key = null
       var echo = 1
 
       function send (data, k) {
@@ -106,18 +106,20 @@
         document.getElementById("sql").disabled = false
         document.getElementById("query").disabled = false
         document.getElementById("query-label").innerHTML = err?String(err):"The query succeed!"
-        for (var i=0; i<rowss.length; i++) {
-          var li = document.createElement("li")
-          var table = document.createElement("table")
-          li.appendChild(table)
-          document.getElementById("rowss").appendChild(li)
-          for (var j=0; j<rowss[i].length; j++) {
-            var tr = document.createElement("tr")
-            table.appendChild(tr)
-            for (var k=0; k<rowss[i][j].length; k++) {
-              var td = document.createElement("td")
-              td.innerText = rowss[i][j][k]
-              tr.appendChild(td)
+        if (rowss) {
+          for (var i=0; i<rowss.length; i++) {
+            var li = document.createElement("li")
+            var table = document.createElement("table")
+            li.appendChild(table)
+            document.getElementById("rowss").appendChild(li)
+            for (var j=0; j<rowss[i].length; j++) {
+              var tr = document.createElement("tr")
+              table.appendChild(tr)
+              for (var k=0; k<rowss[i][j].length; k++) {
+                var td = document.createElement("td")
+                td.innerText = rowss[i][j][k]
+                tr.appendChild(td)
+              }
             }
           }
         }

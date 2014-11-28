@@ -78,9 +78,9 @@ To do so, you should:
         }
         ```
 
-    3. Replace `PATH-TO-MARIAWS` with the path to the installation directory of MariaWS.
-    4. Make sure everyone is able to read `index.html` ; if your system is Unix/OSX you can run `chmod a+r index.html`.
-    5. Run `nginx -c nginx.conf`.
+    3. Replace `PATH-TO-MARIAWS` with the absolute path to the installation directory of MariaWS.
+    4. Make sure everyone is able to read `index.html` ; if your system is Unix/OSX you can run `chmod a+r demo.html`.
+    5. Run `nginx -c PATH-TO-NGINX`, where `PATH-TO-NGINX` is the absolute path to the `nginx.conf` file.
   3. Start MariaWS with the command `node run.js`.
   4. Open your preferred browser (should support WebSockets) and navigate to `http://localhost/index.html`.
 
