@@ -76,8 +76,8 @@ exports.start = function (options) {
       )
     }
     if (((typeof o.key) ==="string") && ((typeof o.sql) === "string")) {
-      if (!dbs[hash]) { return send(ws, o.echo, "db-connection-closed") }
-      return dbs[hash].query(o.query, function (err, rowss) { send (ws, o.echo, err?err.code:null, rowss) })
+      if (!dbs[o.key]) { return send(ws, o.echo, "db-connection-closed") }
+      return dbs[o.key].query(o.sql, function (err, rowss) { send (ws, o.echo, err?err.code:null, rowss) })
     }
     send(ws, o.echo, "invalid-fields", null)
   }

@@ -3,18 +3,41 @@
   <head>
     <meta charset="utf-8">
     <title>MariaWS Demo</title>
+    <style>
+      #main {
+        width:800px;
+        margin: auto;
+      }
+      body, button, input, textarea {
+        font-family: Helvetica, Verdana, Arial, sans-serif;
+        font-weight: 300;
+        font-size: 14px;
+        margin: 10px;
+      }
+      #sql {
+        font-family: "Lucida Console", Monaco, monospace;
+      }
+      table {
+        border-collapse: collapse;
+      }
+      table, td {
+        border: 1px solid black;
+      }
+    </style>
   </head>
   <body>
-    <div>
-      <input id="user" type="text"></input>
-      <input id="password" type="password" ></input>
-      <button id="connect" onclick="connect()">(Re)connect</button>
-      <span id="connect-label"></span>
+    <div id="main">
+      <div>
+        <input id="user" type="text" placeholder="User name..."></input>
+        <input id="password" type="password" placeholder="Password..."></input>
+        <button id="connect" onclick="connect()">(Re)connect</button>
+        <span id="connect-label"></span>
+      </div>
+      <textarea id="sql" cols="70" rows="5" placeholder="SQL query..."></textarea><br>
+      <button id="query" onclick="query()">Run SQL query</button>
+      <span id="query-label"></span>
+      <ol id="rowss"></ol>
     </div>
-    <textarea id="sql"></textarea>
-    <button id="query" onclick="query()">Run SQL query</button>
-    <span id="query-label"></span>
-    <ol id="rowss"></ol>
   </body>
   <script>
 
@@ -79,7 +102,7 @@
       document.getElementById("query").disabled = true
       document.getElementById("query-label").innerHTML = ""
       while(document.getElementById("rowss").firstChild) { document.getElementById("rowss").firstChild.remove() }
-      db.query(document.getElementById("sql").value, function (err, rows) {
+      db.query(document.getElementById("sql").value, function (err, rowss) {
         document.getElementById("sql").disabled = false
         document.getElementById("query").disabled = false
         document.getElementById("query-label").innerHTML = err?String(err):"The query succeed!"
