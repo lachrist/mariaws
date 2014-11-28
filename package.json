@@ -1,9 +1,8 @@
 { "name" : "mariaws"
-, "version" : "0.0.2"
+, "version" : "0.0.5"
 , "dependencies": {"ws":"=0.5.0", "mariasql":"=0.1.21"}
-, "files" : ["mariaws.js", "db.js", "log.js", "main.js"]
+, "files" : ["mariaws.js", "db.js", "log.js", "run.js", "index.html"]
 , "main": "mariaws.js"
-, "bin": "./main.sh"
 , "description" : "A simple Web Socket server for communicating with a MariaDB server."
 , "keywords" : ["Web Socket", "MariaDB"]
 , "homepage": "http://github.com/lachrist/aran"

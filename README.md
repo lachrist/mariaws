@@ -9,7 +9,7 @@ With MariaWS you can use your browser to directly talk to a remote database.
 Once you have installed MariaWS (`npm install mariaws`) you can start the server with the command:
 
 ```shell
-mariaws log=LOG ws-port=WSPORT heartrate=HEARTRATE sql-host=SQLHOST sql-port=SQLPORT
+node run.js log=LOG ws-port=WSPORT heartrate=HEARTRATE sql-host=SQLHOST sql-port=SQLPORT
 ```
 
 Where:
@@ -23,7 +23,7 @@ Where:
   * `SQLPORT` is the port that MariaDB server is listening to, the default value is `3306`.
 
 To gracefully stop MariaWS, simply send the `SIGINT` or `SIGTERM` signal to the node process.
-Note that if you are using Unix/OSX you can use the `nohup` command to cheaply daemonize MariaWS. For instance: `nohup node main.js 1>mariaws.log 2>mariaws.err &`.
+Note that if you are using Unix/OSX you can use the `nohup` command to cheaply daemonize MariaWS. For instance: `nohup node run.js 1>mariaws.log 2>mariaws.err &`.
 
 ## Protocol
 
@@ -79,9 +79,9 @@ To do so, you should:
         ```
 
     3. Replace `PATH-TO-MARIAWS` with the path to the installation directory of MariaWS.
-    4. Make sure everyone is able to read `index.html` ; if your system is Unix/OSX you can run `chmod a+x index.html`.
+    4. Make sure everyone is able to read `index.html` ; if your system is Unix/OSX you can run `chmod a+r index.html`.
     5. Run `nginx -c nginx.conf`.
-  3. Start MariaWS with the command `mariaws`.
+  3. Start MariaWS with the command `node run.js`.
   4. Open your preferred browser (should support WebSockets) and navigate to `http://localhost/index.html`.
 
 ## API
@@ -104,7 +104,7 @@ Mariaws.log("info")
 var stop = Mariaws.start({
   ws_port: 8000,
   sql_port: 3306,
-  sql_host: localhost,
+  sql_host: "localhost",
   heartrate: 30
 })
 
