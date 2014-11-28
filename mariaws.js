@@ -65,7 +65,8 @@ exports.start = function (options) {
     if (((typeof o.user) ==="string") && ((typeof o.password) === "string")) {
       var auth = JSON.stringify({user:o.user, password:o.password})
       var hash = Crypto.createHash("sha256").update(auth).digest("base64")
-      return Db(sql_host, sql_port, o.user, o.password,
+      if (dbs[hash]) { return send(ws, o.echo, null, hash) }
+      return Db.db(sql_host, sql_port, o.user, o.password,
         function (err) { (delete dbs[hash]) },
         function (err, db) {
           if (err) { return send(ws, o.echo, err.code, err) }
@@ -75,7 +76,7 @@ exports.start = function (options) {
       )
     }
     if (((typeof o.key) ==="string") && ((typeof o.sql) === "string")) {
-      if (!dbs[o.hash]) { return send(ws, o.echo, "db-connection-closed") }
+      if (!dbs[hash]) { return send(ws, o.echo, "db-connection-closed") }
       return dbs[hash].query(o.query, function (err, rowss) { send (ws, o.echo, err?err.code:null, rowss) })
     }
     send(ws, o.echo, "invalid-fields", null)

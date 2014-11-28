@@ -79,7 +79,7 @@
       document.getElementById("query").disabled = true
       document.getElementById("query-label").innerHTML = ""
       while(document.getElementById("rowss").firstChild) { document.getElementById("rowss").firstChild.remove() }
-      db.query(document.getElementById("query").value, function (err, rows) {
+      db.query(document.getElementById("sql").value, function (err, rows) {
         document.getElementById("sql").disabled = false
         document.getElementById("query").disabled = false
         document.getElementById("query-label").innerHTML = err?String(err):"The query succeed!"
