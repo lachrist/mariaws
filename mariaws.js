@@ -63,7 +63,8 @@ exports.start = function (options) {
     if ((o === null) || ((typeof o) !== "object")) { return send(ws, 0, "not-an-object", null) }
     if (!o.echo) { return send(this, 0, "no-echo-field", null) }
     if (((typeof o.user) ==="string") && ((typeof o.password) === "string")) {
-      var hash = Crypto.createHash("sha256").update(JSON.stringify(data)).digest("base64")
+      var auth = JSON.stringify({user:o.user, password:o.password})
+      var hash = Crypto.createHash("sha256").update(auth).digest("base64")
       return Db(sql_host, sql_port, o.user, o.password,
         function (err) { (delete dbs[hash]) },
         function (err, db) {
