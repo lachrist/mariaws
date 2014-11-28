@@ -6,10 +6,10 @@ MariaWS is a simple WebSocket server for communicating to a MariaDB server (shou
 ```Browser <---WebSocket---> MariaWS <---TCP---> MariaDB/MySQL```
 
 With MariaWS you can use your browser to directly talk to a remote database.
-Once you have installed MariaWS (`npm install mariaws`) you can start the server with the command:
+Once you have globally installed MariaWS (`npm install mariaws -g`) you can start the server with the command:
 
 ```shell
-node run.js log=LOG ws-port=WSPORT heartrate=HEARTRATE sql-host=SQLHOST sql-port=SQLPORT
+mariaws log=LOG ws-port=WSPORT heartrate=HEARTRATE sql-host=SQLHOST sql-port=SQLPORT
 ```
 
 Where:
@@ -23,7 +23,7 @@ Where:
   * `SQLPORT` is the port that MariaDB server is listening to, the default value is `3306`.
 
 To gracefully stop MariaWS, simply send the `SIGINT` or `SIGTERM` signal to the node process.
-Note that if you are using Unix/OSX you can use the `nohup` command to cheaply daemonize MariaWS. For instance: `nohup node run.js 1>mariaws.log 2>mariaws.err &`.
+Note that if you are using Unix/OSX you can use the `nohup` command to cheaply daemonize MariaWS. For instance: `nohup mariaws 1>mariaws.log 2>mariaws.err &`.
 
 ## Protocol
 
@@ -81,13 +81,13 @@ To do so, you should:
     3. Replace `PATH-TO-MARIAWS` with the absolute path to the installation directory of MariaWS.
     4. Make sure everyone is able to read `index.html` ; if your system is Unix/OSX you can run `chmod a+r demo.html`.
     5. Run `nginx -c PATH-TO-NGINX`, where `PATH-TO-NGINX` is the absolute path to the `nginx.conf` file.
-  3. Start MariaWS with the command `node run.js`.
+  3. Start MariaWS with the command `mariaws`.
   4. Open your preferred browser (should support WebSockets) and navigate to `http://localhost/index.html`.
 
 ## API
 
-MariaWS can also be used within other node modules.
-MariaWS only exposed two functions:
+MariaWS can also be installed locally and be used within other node modules.
+MariaWS only exposes two functions:
   * `log`: changes the logging level (initially set to `error`).
   * `start`: starts a new WebSocket server and returns a function that when invoked shut it down gracefully ; `start` takes an object as parameter that can contain the following fields:
     * `ws_port`: the WebSocket port.
