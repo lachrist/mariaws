@@ -5,37 +5,38 @@ MariaWS is a simple WebSocket server for communicating to a MariaDB server (shou
 
 ```Browser <---WebSocket---> MariaWS <---TCP---> MariaDB/MySQL```
 
-With MariaWS you can use your browser to directly talk to a remote database.
-Once you have globally installed MariaWS (`npm install mariaws -g`) you can start the server with the command:
+With MariaWS enalbes browsers to directly talk to server-side databases using web sockets.
+To install MariaWS, run: `npm install mariaws -g`.
+
+## Usage
 
 ```shell
-mariaws log=LOG ws-port=WSPORT heartrate=HEARTRATE sql-host=SQLHOST sql-port=SQLPORT
+mariaws --port=8000 --accept=/^localhost-3306-/ --heartrate=30 --log=error 
 ```
 
-Where:
-  * `LOG` is the granularity of the loggin information. The possible values are `info`, `warning`, `error` and the default value is `error`.
+Understood arguments are:
+  * `port`: port to which the WebSocket server should listen; default value is `8000`.
+  * `accept`: JavaScript regular expression to discriminate connections; tested against `host-port-db-user`
+  * `heartrate`: number of seconds between successive pings; default value is `30`.
+  * `log`: granularity of the logger; possible values are `info`, `warning`, `error`; default value is `error`.
     * The `info` level logs pretty much everything into the standard output stream (e.g. incomming messages, responses and pings).
     * The `warning` level logs into the standard output streams events that deviate the ideal behavior (e.g. ping timeouts and WebSocket errors).
-    * The `error` level only logs programmatic and critical errors into the standard error stream.
-  * `WSPORT` is the port the node WebSocket server should listen to, the default value is `8000`.
-  * `HEARTRATE` is the number of seconds between successive pings, the default value is `30000`.
-  * `SQLHOST` is the host address of the MariaDB server, the default value is `localhost`.
-  * `SQLPORT` is the port that MariaDB server is listening to, the default value is `3306`.
+    * The `error` level only logs critical errors into the standard error stream.
 
-To gracefully stop MariaWS, simply send the `SIGINT` or `SIGTERM` signal to the node process.
+To gracefully stop MariaWS, send the `SIGINT` or `SIGTERM` signal to the node process.
 Note that if you are using Unix/OSX you can use the `nohup` command to cheaply daemonize MariaWS. For instance: `nohup mariaws 1>mariaws.log 2>mariaws.err &`.
 
 ## Protocol
 
-MariaWS is a pull based server, that is it only respond to client's request and never send message on its own initiative.
+MariaWS is a pull-based server: it will only respond to clients' requests and never send messages on its own initiative.
 The JSON format is used to encode data through the WebSocket channel.
-Two JSON templates are recognized by MariaWS:
-  * `{echo:anything, user:string, password:string}`: Attempting to connect to the mariadb server.
-  * `{echo:anything, key:string, sql:string}`: Performing an sql query using a key obtained with a previous successfull connection.
+MariaWS does its best to recognize two JSON templates:
+  * `{echo:anything, host:string, port:number, db:string, user:string, password:string}`: Attempting to connect to a mariadb server.
+  * `{echo:anything, key:string, sql:string}`: Performs an sql query using a key obtained through a previous successfull connection.
 
 Below is example of successful communication:
 ```json
->> {"echo":1, "user":"smith", "password":"secret"}
+>> {"echo":1, "host":"localhost", "port":3306, "db":"prod", "user":"smith", "password":"secret"}
 << {"echo":1, "error":null, "data":"as2dK...w4="}
 
 >> {"echo":2, "key":"as2dK...w4=", "sql":"SELECT * FROM car;"}
@@ -43,19 +44,15 @@ Below is example of successful communication:
 ```
 
 Beside mysql error code, the error field can contain one of the below values:
-  * `"json-parse-error"`: the incoming message was not a valid JSON string.
-  * `"not-an-object"`: the incoming JSON value was not a javascript object.
-  * `"no-echo-field"`: the incoming JSON value did not contain the `echo` field.
-  * `"invalid-fields"`: the incoming JSON value was not a valid template.
-  * `"db-connection-close"`: the connection to the database crashed, the connection request need to be send again.
+  * `"not-a-json-object"`: the incoming message could not be parsed as a JSON object.
+  * `"no-such-key"`: the given key is not recognized, the connection to the database might have crashed, a connection request should then be sent again.
+  * `"connection-refused"`: the connection did not match the accept regex.
 
-Note that there is no correspondance between WebSocket connection and MariaDB connections.
-More specifically a browser can have access to multiple MariaDB connection and a MariaDB connection can serve mutiple browsers.
-MariaDB connections are established when an unknown login is used and are cannot be closed.
+Note that MariaWS caches database connections, that is that multiple clients might use the same database connection.
 
 ## Demonstration
 
-To demonstrate the usage of MariaWS, lets setup a SQL console within your browser.
+To demonstrate the usage of MariaWS, we propose to setup a SQL console within your browser.
 To do so, you should:
   1. Have a MariaDB server running locally and listening to port 3306.
   2. Have a local HTTP server able to serve the `index.html` file from this repository and that forward Web Socket connections to `http://localhost:8000`. If you do not know how to do this you can:
@@ -81,34 +78,17 @@ To do so, you should:
     3. Replace `PATH-TO-MARIAWS` with the absolute path to the installation directory of MariaWS.
     4. Make sure everyone is able to read `index.html` ; if your system is Unix/OSX you can run `chmod a+r demo.html`.
     5. Run `nginx -c PATH-TO-NGINX`, where `PATH-TO-NGINX` is the absolute path to the `nginx.conf` file.
-  3. Start MariaWS with the command `mariaws`.
+  3. Start MariaWS: `mariaws `.
   4. Open your preferred browser (should support WebSockets) and navigate to `http://localhost/index.html`.
 
 ## API
 
-MariaWS can also be installed locally and be used within other node modules.
-MariaWS only exposes two functions:
-  * `log`: changes the logging level (initially set to `error`).
-  * `start`: starts a new WebSocket server and returns a function that when invoked shut it down gracefully ; `start` takes an object as parameter that can contain the following fields:
-    * `ws_port`: the WebSocket port.
-    * `sql_port`: the MariaDB port.
-    * `sql_host`: the MariaDB host.
-    * `heartrate`: the number of second between two successive pings.
+MariaWS also has a simple API closes to its command line interface:
 
-For instance:
 ```javascript
-var Mariaws = require("mariaws")
-
-Mariaws.log("info")
-
-var stop = Mariaws.start({
-  ws_port: 8000,
-  sql_port: 3306,
-  sql_host: "localhost",
-  heartrate: 30
-})
-
-process.on("SIGINT", stop)
+var Mariaws = require("mariaws");
+var stop = Mariaws({log:"info", port:8000, heartrate:30});
+process.on("SIGINT", stop);
 ```
 
 

@@ -1,40 +1,34 @@
 
-var MariaSql = require("mariasql")
-var Log = require("./log.js")
+var MariaSql = require("mariasql");
 
 function end () {
-  this.__client.removeAllListeners("close")
-  this.__client.end()
+  this.__client.removeAllListeners("close");
+  this.__client.end();
 }
 
 function query (sql, k) {
-  var error = null
-  var rowss = []
+  var error = undefined;
+  var rowss = [];
   this.__client.query(sql, true)
     .on("end", function () { k(error, rowss) })
-    .on("error", function (err) { error=err })
+    .on("error", function (err) { error = err })
     .on("result", function (res) {
-      var rows = []
-      res.on("row", function (row) { rows.push(row) })
-      res.on("end", function () { rowss.push(rows) }) 
-    })
+      var rows = [];
+      res.on("row", function (row) { rows.push(row) });
+      res.on("end", function () { rowss.push(rows) });
+    });
 }
 
-exports.db = function (host, port, user, password, oncrash, k) {
-  var client = new MariaSql()
-  client.on("error", k)
+module.exports = function (options, log, oncrash, k) {
+  options.keepQueries = false;
+  options.multiStatements = true;
+  var client = new MariaSql();
+  client.on("error", function (err) { k(err.code) });
   client.on("connect", function () {
-    client.removeAllListeners("error")
-    client.on("error", Log.fail)
-    client.on("close", oncrash)
-    k(null, {__client:client, end:end, query:query})
-  })
-  client.connect({
-    keepQueries: false,
-    multiStatements: true,
-    host: host,
-    port: port,
-    user: user,
-    password: password
-  })
-}
+    client.removeAllListeners("error");
+    client.on("error", log.fail);
+    client.on("close", oncrash);
+    k(undefined, {__client:client, end:end, query:query});
+  });
+  client.connect(options);
+};
